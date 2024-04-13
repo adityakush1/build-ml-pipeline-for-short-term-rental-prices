@@ -95,6 +95,9 @@ def go(config: DictConfig):
             )
 
 #mlflow run . -P steps="train_random_forest"
+#mlflow run . \
+#   -P steps=train_random_forest \
+#   -P hydra_options="modeling.random_forest.max_depth=10,50,100 modeling.random_forest.n_estimators=100,200,500 -m"
         if "train_random_forest" in active_steps:
 
             # NOTE: we need to serialize the random forest configuration into JSON
@@ -109,7 +112,20 @@ def go(config: DictConfig):
             # Implement here #
             ##################
 
-            pass
+            _ = mlflow.run(
+                os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
+                "main",
+                parameters={
+                    "trainval_artifact": "trainval_data.csv:latest",
+                    "val_size": config['modeling']['val_size'],
+                    "random_seed": config['modeling']['random_seed'],
+                    "stratify_by": config['modeling']['stratify_by'],
+                    "rf_config": rf_config,
+                    "max_tfidf_features": config['modeling']['max_tfidf_features'],
+                    "output_artifact": "random_forest_export"
+                },
+            )
+
 
 
 #mlflow run . -P steps="test_regression_model"
