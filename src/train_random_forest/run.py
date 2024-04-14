@@ -107,7 +107,10 @@ def go(args):
     temp_dir = tempfile.mkdtemp(dir='./')
     export_path = os.path.join(temp_dir, 'random_forest_dir')
     
-    mlflow.sklearn.save_model(sk_pipe, export_path)
+    mlflow.sklearn.save_model(
+        sk_pipe,
+        export_path
+        )
     
     ######################################
     # Upload the model we just exported to W&B
