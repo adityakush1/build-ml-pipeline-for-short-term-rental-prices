@@ -46,6 +46,10 @@ def go(args):
     # df = df.dropna().reset_index(drop=True)
     # We will handle this in inference pipeline
     
+    #location
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+    
     logger.info("Cleaning artifact Completed ")
     
     logger.debug("Saving file ")
